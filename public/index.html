@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hush — URL shortener</title>
+  <meta name="description" content="Shorten URLs without ads, logins, or tracking. Fast 302 redirects, durable click counts.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0A0A0A">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0A'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='700' fill='%23EDEDED' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
+  <meta property="og:title" content="Hush — URL shortener">
+  <meta property="og:description" content="Short links, no noise. No ads, no login, no tracking.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hush.abiram08.dev/">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" referrerpolicy="no-referrer">
+  <link href="./shorty.css" rel="stylesheet">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="topbar-brand" href="/">Hush</a>
+      <div class="topbar-meta">
+        <span class="topbar-status" id="statusBadge" data-status="ok">
+          <span class="topbar-dot" aria-hidden="true"></span>
+          <span class="topbar-status-text">Operational</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="page">
+    <section class="hero" aria-label="Shorten a URL">
+      <h1 class="hero-title">Short links, no noise.</h1>
+      <p class="hero-sub">No ads. No login. No tracking. Paste a long URL, get a fast 302. Clicks are counted durably.</p>
+
+      <form id="shortenForm" class="shorten" novalidate>
+        <div class="shorten-field">
+          <label class="visually-hidden" for="longUrl">Long URL</label>
+          <input
+            id="longUrl"
+            type="url"
+            inputmode="url"
+            autocomplete="url"
+            spellcheck="false"
+            placeholder="Paste a long URL — try https://example.com/very/long/path"
+            required>
+          <button type="submit" id="shortenButton" class="btn btn-primary">
+            <span class="btn-label">Shorten</span>
+            <span class="btn-spinner" aria-hidden="true"></span>
+          </button>
+        </div>
+        <p id="shortenError" class="err" role="alert" hidden></p>
+
+        <div id="shortenOutput" class="output" hidden>
+          <div class="output-row">
+            <span class="output-label">Short link</span>
+            <span id="shortUrlOutput" class="output-url" role="button" tabindex="0" title="Click to copy"></span>
+            <button type="button" id="copyButton" class="btn btn-primary btn-sm">
+              <span id="copyButtonLabel">Copy</span>
+            </button>
+            <a id="openButton" class="btn btn-ghost btn-sm" href="#" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+          <div class="output-meta">
+            <code id="shortCodeOutput" class="chip"></code>
+            <span id="shortUrlOrigin" class="chip-muted"></span>
+            <button type="button" id="inspectCreatedButton" class="btn-inline">Inspect →</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <div class="rule-hatched" aria-hidden="true"></div>
+
+    <section class="panel" aria-label="Inspect a short link">
+      <header class="panel-head">
+        <h2 class="panel-title">Inspect</h2>
+        <p class="panel-sub">Look up any short code to see its destination and click count.</p>
+      </header>
+      <form id="statsForm" class="inspect" novalidate>
+        <div class="inspect-field">
+          <label class="visually-hidden" for="statsCode">Short code</label>
+          <input
+            id="statsCode"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Enter a short code — e.g. b"
+            required>
+          <button type="submit" id="statsButton" class="btn btn-secondary">
+            <span class="btn-label">Lookup</span>
+            <span class="btn-spinner" aria-hidden="true"></span>
+          </button>
+        </div>
+        <p id="statsError" class="err" role="alert" hidden></p>
+
+        <div id="statsResult" class="stats" hidden>
+          <div class="stats-head">
+            <code id="statsShortCode" class="chip"></code>
+            <span class="stats-clicks">
+              <span id="statsClickCount">0</span> clicks
+            </span>
+            <span class="stats-date" id="statsCreatedAt"></span>
+          </div>
+          <div class="stats-dest">
+            <span class="output-label">Destination</span>
+            <p id="statsLongUrl" class="stats-url"></p>
+          </div>
+          <div class="stats-actions">
+            <a id="statsOpenLink" class="btn btn-ghost btn-sm" href="#" target="_blank" rel="noopener">Open ↗</a>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <div class="rule-hatched" aria-hidden="true"></div>
+
+    <section class="panel how" aria-label="How it works">
+      <header class="panel-head">
+        <h2 class="panel-title">How it works</h2>
+        <p class="panel-sub">Three steps. Nothing to install, nothing to sign into.</p>
+      </header>
+      <ol class="steps">
+        <li class="step">
+          <span class="step-n">01</span>
+          <h3 class="step-t">Paste</h3>
+          <p class="step-d">Drop any http(s) link. The same URL always returns the same code.</p>
+        </li>
+        <li class="step">
+          <span class="step-n">02</span>
+          <h3 class="step-t">Share</h3>
+          <p class="step-d">Get a short 302 link. No ads, no interstitial page, no login wall.</p>
+        </li>
+        <li class="step">
+          <span class="step-n">03</span>
+          <h3 class="step-t">Count</h3>
+          <p class="step-d">Every visit increments a public counter. Anyone with the code can see it in Inspect — no accounts, no dashboards.</p>
+        </li>
+      </ol>
+      <div class="api">
+        <div class="api-head">
+          <span class="api-label">API</span>
+          <code class="chip">POST /shorten</code>
+          <button type="button" id="copyApiButton" class="btn btn-ghost btn-sm">Copy</button>
+        </div>
+<pre class="api-snippet"><code># Idempotency-Key makes retries safe — same key returns the same code
+curl -X POST /shorten \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 6e8b0b2a" \
+  -d '{"longUrl":"https://example.com/very/long/path"}'
+
+→ 201 {"shortUrl":"…/b", "shortCode":"b"}</code></pre>
+      </div>
+    </section>
+
+    <div class="rule-hatched" aria-hidden="true"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Hush — ad-free, no login, no tracking.</span>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="/health" target="_blank" rel="noopener">Health</a>
+        <span class="footer-sep">·</span>
+        <a href="/metrics" target="_blank" rel="noopener">Metrics</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
