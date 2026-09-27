@@ -1,0 +1,20 @@
+# Rust build artifacts
+/target/
+
+# Environment and secrets — never commit these
+.env
+.env.local
+.env.*.local
+
+# Logs and runtime output
+*.log
+
+# Test coverage
+coverage/
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+
+# Local testing artifacts
+*.json.tmp
